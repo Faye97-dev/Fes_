@@ -50,27 +50,32 @@ export default [
             {
               "label": "Tableau de bord",
               "description": "....",
-              "to": "/dashboard"
+              "to": "/dashboard",
+              "role":"*"
             },
             {
               "label": "Transactions",
               "description": "....",
-              "to": "/transaction"
+              "to": "/transaction",
+              "role":"*"
             },
             {
               "label": "Agences",
               "description": "....",
-              "to": "/agence"
+              "to": "/agence",
+              "role":["RESPONSABLE_AGENCE"]
             },
             {
               "label": "Employes",
               "description": "....",
-              "to": "/employe"
+              "to": "/employe",
+              "role":["RESPONSABLE_AGENCE"]
             },
             {
               "label": "Clotures",
               "description": "....",
-              "to": "/cloture"
+              "to": "/cloture",
+              "role":"*"
             }
           ]
         }

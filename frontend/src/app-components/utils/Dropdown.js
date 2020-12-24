@@ -2,7 +2,6 @@ import React from "react";
 
 import { Menu, MenuItem, IconButton } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ModalTransactionDetail from "../ModalTransactionDetail";
 
 export default function Dropdown(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -32,7 +31,7 @@ export default function Dropdown(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <ModalTransactionDetail item={props.item}></ModalTransactionDetail>
+        {props.children}
         <MenuItem onClick={handleClose}>
           <IconButton size="small" variant="outlined" color="primary">
             <FontAwesomeIcon icon={["fas", "edit"]} />

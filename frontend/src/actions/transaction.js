@@ -8,6 +8,7 @@ import {
   ADD_RETRAIT,
   ADD_CLIENT,
   UPDATE_SOLDE,
+  HISTORY_TRANSACTIONS,
 } from "./types";
 
 import { updateSolde } from "./async";
@@ -18,7 +19,7 @@ import { updateSolde } from "./async";
   });
 };*/
 
-export const getTransactions = () => (dispatch, getState) => {
+export const getTransactions = (all) => (dispatch, getState) => {
   //const access = getState().auth.access;
   const config = {
     headers: {
@@ -31,10 +32,18 @@ export const getTransactions = () => (dispatch, getState) => {
   axios
     .get(HOST + `api/transaction/list/`, config)
     .then((res) => {
-      dispatch({
-        type: GET_TRANSACTIONS,
-        payload: res.data,
-      });
+      if (all) {
+        dispatch({
+          type: GET_TRANSACTIONS,
+          payload: res.data,
+        });
+      } else {
+        dispatch({
+          type: HISTORY_TRANSACTIONS,
+          payload: res.data,
+        });
+      }
+
       console.log(res.data);
     })
     .catch((err) => {

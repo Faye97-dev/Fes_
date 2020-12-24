@@ -138,7 +138,7 @@ class FormTransfert extends Component {
     const data = {
       ...values,
       categorie_transaction: this.state.IsSup300,
-      agence_origine: this.props.agence.id,
+      agence_origine: this.props.user.agence.id,
     };
     this.props.addTransfert(data);
     //this.props.login();
@@ -233,9 +233,11 @@ class FormTransfert extends Component {
                       label="Selectionner une agence de destination"
                       formControlProps={{ fullWidth: true }}
                     >
-                      {this.props.agence &&
+                      {this.props.user &&
                         this.props.agences
-                          .filter((item) => this.props.agence.id !== item.id)
+                          .filter(
+                            (item) => this.props.user.agence.id !== item.id
+                          )
                           .map((item) => {
                             return (
                               <MenuItem key={item.id} value={item.id}>
@@ -351,7 +353,7 @@ class FormTransfert extends Component {
 const mapStateToProps = (state) => ({
   agences: state.transaction.agences,
   clients: state.transaction.clients,
-  agence: state.auth.agence,
+  user: state.auth.user,
 });
 
 export default connect(mapStateToProps, {

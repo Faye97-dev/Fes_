@@ -1,3 +1,4 @@
+from django_filters import rest_framework as filters
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status, generics, viewsets
 from rest_framework.response import Response
@@ -5,7 +6,7 @@ from rest_framework.views import APIView
 from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from users.models import MyUser
+from users.models import MyUser, Employee, Responsable
 
 # login
 
@@ -58,63 +59,23 @@ class Responsable_UserCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-'''
-class Student_UserCreate(APIView):
+class EmployeFilter(filters.FilterSet):
+    class Meta:
+        model = Employee
+        fields = ['agence']
+
+
+class EmployeListAPIViews(generics.ListAPIView):
+    serializer_class = Employe_UserSerializer
     permission_classes = [AllowAny]
-
-    def post(self, request, format='json'):
-        serializer = Student_UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            print(user)
-            if user:
-                #json = serializer.data
-                return Response({'msg': "Student Created succefuly"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = Employee.objects.all()
+    filterset_class = EmployeFilter
 
 
-class Current_Student_API(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = StudentSerializer
-
-    def get_object(self):
-        return Student.objects.get(user=self.request.user)
-
-
-class Teacher_UserCreate(APIView):
+class ResponsableRetriveAPIViews(generics.RetrieveAPIView):
+    serializer_class = Responsable_UserSerializer
     permission_classes = [AllowAny]
-
-    def post(self, request, format='json'):
-        serializer = Teacher_UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            print(user)
-            if user:
-                #json = serializer.data
-                return Response({'msg': "Teacher Created succefuly"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class Current_Teacher_API(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = TeacherSerializer
-
-    def get_object(self):
-        return Teacher.objects.get(user=self.request.user)
-
-
-class GetUserViewsets(generics.RetrieveAPIView):
-    serializer_class = New_UserSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = NewUser.objects.all()
-
-'''
-
-
-class ListUserViewsets(generics.ListAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
-    queryset = MyUser.objects.all()
+    queryset = Responsable.objects.all()
 
 # logout
 

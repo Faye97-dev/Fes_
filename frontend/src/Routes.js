@@ -14,30 +14,15 @@ import { LeftSidebar, PresentationLayout } from "./layout-blueprints";
 
 import Buttons from "./example-pages/Buttons";
 import Dropdowns from "./example-pages/Dropdowns";
-import NavigationMenus from "./example-pages/NavigationMenus";
-import ProgressBars from "./example-pages/ProgressBars";
-import Pagination from "./example-pages/Pagination";
-import Scrollable from "./example-pages/Scrollable";
-import Badges from "./example-pages/Badges";
-import Icons from "./example-pages/Icons";
-import UtilitiesHelpers from "./example-pages/UtilitiesHelpers";
-import RegularTables1 from "./example-pages/RegularTables1";
-import RegularTables4 from "./example-pages/RegularTables4";
-import FormsControls from "./example-pages/FormsControls";
+import TransactionList from "./app-components/TransactionList";
+import AgenceList from "./app-components/AgenceList";
+import EmployeList from "./app-components/EmployeList";
 
 const Dashboard = lazy(() => import("./app-components/Dashboard"));
 
 const DashboardDefault = lazy(() => import("./example-pages/DashboardDefault"));
-const Cards3 = lazy(() => import("./example-pages/Cards3"));
+
 const LandingPage = lazy(() => import("./example-pages/LandingPage"));
-const Accordions = lazy(() => import("./example-pages/Accordions"));
-const Modals = lazy(() => import("./example-pages/Modals"));
-const Notifications = lazy(() => import("./example-pages/Notifications"));
-const Popovers = lazy(() => import("./example-pages/Popovers"));
-const Tabs = lazy(() => import("./example-pages/Tabs"));
-const ApexCharts = lazy(() => import("./example-pages/ApexCharts"));
-const Maps = lazy(() => import("./example-pages/Maps"));
-const ListGroups = lazy(() => import("./example-pages/ListGroups"));
 
 const Routes = () => {
   const location = useLocation();
@@ -93,29 +78,12 @@ const Routes = () => {
 
             <Route
               path={[
-                "/Dashboard",
+                "/dashboard",
+                "/transaction",
+                "/agence",
+                "/employe",
                 "/DashboardDefault",
                 "/Buttons",
-                "/Dropdowns",
-                "/NavigationMenus",
-                "/ProgressBars",
-                "/Pagination",
-                "/Scrollable",
-                "/Badges",
-                "/Icons",
-                "/UtilitiesHelpers",
-                "/Cards3",
-                "/Accordions",
-                "/Modals",
-                "/Notifications",
-                "/Popovers",
-                "/Tabs",
-                "/RegularTables1",
-                "/RegularTables4",
-                "/FormsControls",
-                "/ApexCharts",
-                "/Maps",
-                "/ListGroups",
               ]}
             >
               <LeftSidebar>
@@ -128,6 +96,9 @@ const Routes = () => {
                     transition={pageTransition}
                   >
                     <Route path="/dashboard" component={Dashboard} />
+                    <Route path="/transaction" component={TransactionList} />
+                    <Route path="/agence" component={AgenceList} />
+                    <Route path="/employe" component={EmployeList} />
 
                     <Route
                       path="/DashboardDefault"
@@ -135,31 +106,6 @@ const Routes = () => {
                     />
                     <Route path="/Buttons" component={Buttons} />
                     <Route path="/Dropdowns" component={Dropdowns} />
-                    <Route
-                      path="/NavigationMenus"
-                      component={NavigationMenus}
-                    />
-                    <Route path="/ProgressBars" component={ProgressBars} />
-                    <Route path="/Pagination" component={Pagination} />
-                    <Route path="/Scrollable" component={Scrollable} />
-                    <Route path="/Badges" component={Badges} />
-                    <Route path="/Icons" component={Icons} />
-                    <Route
-                      path="/UtilitiesHelpers"
-                      component={UtilitiesHelpers}
-                    />
-                    <Route path="/Cards3" component={Cards3} />
-                    <Route path="/Accordions" component={Accordions} />
-                    <Route path="/Modals" component={Modals} />
-                    <Route path="/Notifications" component={Notifications} />
-                    <Route path="/Popovers" component={Popovers} />
-                    <Route path="/Tabs" component={Tabs} />
-                    <Route path="/RegularTables1" component={RegularTables1} />
-                    <Route path="/RegularTables4" component={RegularTables4} />
-                    <Route path="/FormsControls" component={FormsControls} />
-                    <Route path="/ApexCharts" component={ApexCharts} />
-                    <Route path="/Maps" component={Maps} />
-                    <Route path="/ListGroups" component={ListGroups} />
                   </motion.div>
                 </Switch>
               </LeftSidebar>

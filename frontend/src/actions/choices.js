@@ -19,6 +19,12 @@ export const mapColorStatus = {
   TO_VALIDATE: "info",
 };
 
+export const mapColorAgence = {
+  AGENCE_INTERN: "info",
+  PARTNER_SILVER: "warning",
+  PARTNER_GOLD: "success",
+};
+
 export const mapColorTypes = {
   "01": "success",
   "02": "warning",

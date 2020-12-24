@@ -7,7 +7,7 @@ import { List, Typography } from "@material-ui/core";
 
 import useRouter from "../../utils/useRouter";
 import SidebarMenuListItem from "./SidebarMenuListItem";
-
+import PrivateSidebarMenu from "./PrivateSidebarMenu";
 const SidebarMenuList = (props) => {
   const { pages, ...rest } = props;
 
@@ -53,16 +53,18 @@ const reduceChildRoutes = (props) => {
         </div>
       </SidebarMenuListItem>
     );
+    //console.log(page);
   } else {
     items.push(
-      <SidebarMenuListItem
+      PrivateSidebarMenu("RESPONSABLE_AGENCE", page, depth)
+      /*<SidebarMenuListItem
         depth={depth}
         href={page.to}
         icon={page.icon}
         key={page.label}
         label={page.badge}
         title={page.label}
-      />
+      />*/
     );
   }
 

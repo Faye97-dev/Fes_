@@ -14,14 +14,110 @@ import {
   CardContent,
   Button,
   Tooltip,
+  Typography,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import Dropdown from "./utils/Dropdown";
+import Pagination from "@material-ui/lab/Pagination";
 import ModalTransactionDetail from "./ModalTransactionDetail";
+import Dropdown from "./utils/Dropdown";
+import {
+  filterDataProcess,
+  filterToBool,
+  PaginateData,
+} from "./utils/DataTable";
 
-export class TransactionHistory extends Component {
+import ModalFilter from "./ModalFilter";
+export class TransactionList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      init: true,
+      search: "",
+      totalPage: 1,
+      totalRows: 5,
+      totalData: 0,
+      page: 1,
+      current: [],
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.search = this.search.bind(this);
+    this.reset = this.reset.bind(this);
+    this.handlePage = this.handlePage.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
+  }
   componentDidMount() {
-    this.props.getTransactions(false);
+    this.props.getTransactions(true);
+  }
+  UNSAFE_componentWillUpdate(nextProps) {
+    if (nextProps.transactions !== this.state.data && this.state.init) {
+      console.log(" sync transactions to props table  ...");
+      this.Paginate([...nextProps.transactions], this.state.totalRows, true);
+    }
+  }
+
+  reset() {
+    console.log(" reset ...");
+    this.Paginate([...this.props.transactions], this.state.totalRows, true);
+  }
+
+  handleChange(event) {
+    this.setState({ ...this.state, search: event.target.value });
+  }
+  search() {
+    const filter = [...this.props.transactions].filter((item) =>
+      item.transaction.destinataire.nom.includes(this.state.search)
+    );
+    this.Paginate([...filter], this.state.totalRows, false);
+  }
+
+  handlePage(e, val) {
+    this.setState({
+      ...this.state,
+      page: val,
+      current: [...this.state.data].filter((item) => item.page === val),
+    });
+  }
+
+  Paginate(data, rows, resetSearch) {
+    const [page, paginated] = PaginateData(data, rows);
+    //return [page, paginated];
+    const temp = [...paginated].filter((item) => item.page === 1);
+    if (resetSearch) {
+      this.setState({
+        ...this.state,
+        data: [...paginated],
+        init: false,
+        search: "",
+        totalPage: page,
+        totalData: paginated.length,
+        page: 1,
+        current: temp,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        data: [...paginated],
+        init: false,
+        totalPage: page,
+        totalData: paginated.length,
+        page: 1,
+        current: temp,
+      });
+    }
+  }
+
+  handleFilter(data) {
+    /*const [fil, keys] = filterDataProcess({
+      "transaction#status": "WITHDRAWED",
+      type_transaction: "02",
+    });*/
+    //const keys = Object.keys({ ...fil });
+    //const keys = [["transaction", "status"], ["type_transaction"]];
+    const [fil, keys] = filterDataProcess(data);
+    const filter = [...this.props.transactions].filter((item) =>
+      filterToBool(item, fil, keys)
+    );
+    this.Paginate([...filter], this.state.totalRows, true);
   }
 
   render() {
@@ -30,7 +126,34 @@ export class TransactionHistory extends Component {
         <Card className="card-box mb-4">
           <div className="card-header pr-2">
             <div className="card-header--title">
-              <h6>Historiques des Transactions</h6>
+              <h6>Liste des Transactions</h6>
+              <label className="px-3">
+                <input
+                  type="text"
+                  value={this.state.search}
+                  onChange={this.handleChange}
+                />
+              </label>
+              <Button
+                size="small"
+                variant="contained"
+                className="mr-3"
+                color="primary"
+                onClick={this.search}
+              >
+                search
+              </Button>
+
+              <ModalFilter className="px-3" handleFilter={this.handleFilter} />
+              <Button
+                size="small"
+                variant="contained"
+                className="mr-3"
+                color="primary"
+                onClick={this.reset}
+              >
+                reset
+              </Button>
             </div>
             <div className="card-header--actions">
               <Tooltip arrow title="Refresh">
@@ -57,7 +180,7 @@ export class TransactionHistory extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.transactions.map((item) => {
+                  {this.state.current.map((item) => {
                     return (
                       <tr key={item.id}>
                         <td>{item.code_transaction}</td>
@@ -145,18 +268,23 @@ export class TransactionHistory extends Component {
             </div>
           </CardContent>
           <div className="card-footer d-flex justify-content-between">
-            <div>
-              <Button
-                to="/transaction"
-                component={Link}
-                size="small"
-                variant="contained"
-                className="mr-3"
-                color="primary"
-              >
-                Voir toute la liste
-              </Button>
-            </div>
+            {/*<Button
+              size="small"
+              variant="contained"
+              className="mr-3"
+              color="primary"
+              onClick={() => this.handleFilter({})}
+            >
+              WITHDRAWED
+            </Button>*/}
+          </div>
+          <div>
+            <Typography>{"Total :" + " " + this.state.totalData}</Typography>
+            <Pagination
+              count={this.state.totalPage}
+              page={this.state.page}
+              onChange={this.handlePage}
+            />
           </div>
         </Card>
       </Fragment>
@@ -170,4 +298,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getTransactions,
-})(TransactionHistory);
+})(TransactionList);

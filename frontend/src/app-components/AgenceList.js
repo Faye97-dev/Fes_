@@ -2,12 +2,8 @@ import React, { Fragment, Component } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { connect } from "react-redux";
-import { getTransactions } from "../actions/transaction";
-import {
-  mapColorStatus,
-  mapTypeNames,
-  mapColorTypes,
-} from "../actions/choices";
+import { getAgences } from "../actions/transaction";
+import { mapColorAgence } from "../actions/choices";
 import {
   IconButton,
   Card,
@@ -15,13 +11,12 @@ import {
   Button,
   Tooltip,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import Dropdown from "./utils/Dropdown";
-import ModalTransactionDetail from "./ModalTransactionDetail";
 
-export class TransactionHistory extends Component {
+import Dropdown from "./utils/Dropdown";
+
+export class AgenceList extends Component {
   componentDidMount() {
-    this.props.getTransactions(false);
+    this.props.getAgences();
   }
 
   render() {
@@ -30,7 +25,7 @@ export class TransactionHistory extends Component {
         <Card className="card-box mb-4">
           <div className="card-header pr-2">
             <div className="card-header--title">
-              <h6>Historiques des Transactions</h6>
+              <h6>Liste des Agences</h6>
             </div>
             <div className="card-header--actions">
               <Tooltip arrow title="Refresh">
@@ -45,23 +40,21 @@ export class TransactionHistory extends Component {
               <table className="table table-borderless table-hover text-nowrap mb-0">
                 <thead>
                   <tr>
-                    <th className="text-left">Numero</th>
-                    <th className="text-left">Date</th>
-                    <th className="text-center">Agence d'origine</th>
-                    <th className="text-center">Agence de destination</th>
-                    <th className="text-center">Destinataire </th>
-                    <th className="text-center">Montant</th>
+                    <th className="text-left">Code Agence</th>
+                    <th className="text-left">Nom</th>
+                    <th className="text-center">Adresse</th>
+                    <th className="text-center">Contact </th>
                     <th className="text-center">Type </th>
                     <th className="text-center">Status </th>
-                    <th className="text-center">Actions</th>
+                    <th className="text-center">Actions </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {this.props.transactions.map((item) => {
+                  {this.props.agences.map((item) => {
                     return (
                       <tr key={item.id}>
-                        <td>{item.code_transaction}</td>
-                        <td>{item.date}</td>
+                        <td>{item.code_agence}</td>
+                        <td>{item.nom}</td>
                         <td className="text-center">
                           <div>
                             <a
@@ -70,10 +63,10 @@ export class TransactionHistory extends Component {
                               className="font-weight-bold text-black"
                               title="..."
                             >
-                              {item.transaction.agence_origine.nom}
+                              {item.commune.commune}
                             </a>
                             <span className="text-black-50 d-block">
-                              {item.transaction.agence_origine.type_agence}
+                              {item.adresse}
                             </span>
                           </div>
                         </td>
@@ -85,38 +78,11 @@ export class TransactionHistory extends Component {
                               className="font-weight-bold text-black"
                               title="..."
                             >
-                              {item.transaction.agence_destination.nom}
+                              {item.tel}
                             </a>
                             <span className="text-black-50 d-block">
-                              {item.transaction.agence_destination.type_agence}
+                              {item.email}
                             </span>
-                          </div>
-                        </td>
-                        <td className="text-center">
-                          <div>
-                            <a
-                              href="#/"
-                              onClick={(e) => e.preventDefault()}
-                              className="font-weight-bold text-black"
-                              title="..."
-                            >
-                              {item.transaction.destinataire.nom}
-                            </a>
-                            <span className="text-black-50 d-block">
-                              {item.transaction.destinataire.tel}
-                            </span>
-                          </div>
-                        </td>
-                        <td> {item.transaction.montant} MRU</td>
-                        <td className="text-center">
-                          <div
-                            className={
-                              "badge px-4" +
-                              " badge-" +
-                              mapColorTypes[item.type_transaction]
-                            }
-                          >
-                            {mapTypeNames[item.type_transaction]}
                           </div>
                         </td>
                         <td className="text-center">
@@ -124,18 +90,27 @@ export class TransactionHistory extends Component {
                             className={
                               "badge px-4" +
                               " badge-" +
-                              mapColorStatus[item.transaction.status]
+                              mapColorAgence[item.type_agence]
                             }
                           >
-                            {item.transaction.status}
+                            {item.type_agence}
                           </div>
                         </td>
+
                         <td className="text-center">
-                          <Dropdown>
-                            <ModalTransactionDetail
-                              item={item}
-                            ></ModalTransactionDetail>
-                          </Dropdown>
+                          <div
+                            className={
+                              item.online
+                                ? "badge px-4 badge-success"
+                                : "badge px-4 badge-danger"
+                            }
+                          >
+                            {item.online ? "En ligne" : "Hors ligne"}
+                          </div>
+                        </td>
+
+                        <td className="text-center">
+                          <Dropdown item={item}></Dropdown>
                         </td>
                       </tr>
                     );
@@ -144,20 +119,7 @@ export class TransactionHistory extends Component {
               </table>
             </div>
           </CardContent>
-          <div className="card-footer d-flex justify-content-between">
-            <div>
-              <Button
-                to="/transaction"
-                component={Link}
-                size="small"
-                variant="contained"
-                className="mr-3"
-                color="primary"
-              >
-                Voir toute la liste
-              </Button>
-            </div>
-          </div>
+          <div className="card-footer d-flex justify-content-between"></div>
         </Card>
       </Fragment>
     );
@@ -165,9 +127,9 @@ export class TransactionHistory extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  transactions: state.transaction.transactions,
+  agences: state.transaction.agences,
 });
 
 export default connect(mapStateToProps, {
-  getTransactions,
-})(TransactionHistory);
+  getAgences,
+})(AgenceList);

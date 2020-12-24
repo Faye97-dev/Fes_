@@ -5,6 +5,7 @@ import {
   ADD_TRANSFERT,
   ADD_RETRAIT,
   ADD_CLIENT,
+  HISTORY_TRANSACTIONS,
 } from "../actions/types.js";
 
 const initialState = {
@@ -16,6 +17,11 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
     case GET_TRANSACTIONS:
+      return {
+        ...state,
+        transactions: [...action.payload],
+      };
+    case HISTORY_TRANSACTIONS:
       return {
         ...state,
         transactions: [...action.payload].slice(0, 5),

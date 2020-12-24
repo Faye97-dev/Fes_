@@ -27,7 +27,7 @@ export class Dashboard extends Component {
                       Total de solde
                     </h6>
                     <span className="font-size-xxl mt-1">
-                      {this.props.agence && this.props.agence.solde} MRU
+                      {this.props.user && this.props.user.agence.solde} MRU
                     </span>
                   </div>
                   {/*<div className="ml-auto">
@@ -43,8 +43,9 @@ export class Dashboard extends Component {
                 <Grid container spacing={2}>
                   <Grid item xs={6} md={6} className="text-left">
                     <span className="text-white px-1 font-weight-bold">
-                      {this.props.agence &&
-                        this.props.agence.solde - this.props.agence.frais}{" "}
+                      {this.props.user &&
+                        this.props.user.agence.solde -
+                          this.props.user.agence.frais}{" "}
                       MRU
                     </span>
                     <br />
@@ -52,7 +53,7 @@ export class Dashboard extends Component {
                   </Grid>
                   <Grid item xs={6} md={6} className="text-right">
                     <span className="text-white px-1 font-weight-bold">
-                      {this.props.agence && this.props.agence.retrait} MRU
+                      {this.props.user && this.props.user.agence.retrait} MRU
                     </span>
                     <br />
                     <span className="text-white-20">Total de retraits</span>
@@ -74,6 +75,6 @@ export class Dashboard extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  agence: state.auth.agence,
+  user: state.auth.user,
 });
 export default connect(mapStateToProps, { login })(Dashboard);

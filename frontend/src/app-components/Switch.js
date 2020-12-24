@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -59,32 +59,44 @@ const IOSSwitch = withStyles((theme) => ({
   );
 });
 
-function CustomizedSwitches(props) {
-  const [state, setState] = React.useState({
-    checkedB: false,
-  });
-
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-    props.updateStatusAgence(event.target.checked);
+export class CustomizedSwitches extends Component {
+  state = {
+    checked: false,
   };
 
-  return (
-    <FormGroup>
-      <FormControlLabel
-        control={
-          <IOSSwitch
-            checked={state.checkedB}
-            onChange={handleChange}
-            name="checkedB"
-          />
-        }
-        label="Active"
-      />
-    </FormGroup>
-  );
+  handleChange = (event) => {
+    this.setState({ ...this.state, [event.target.name]: event.target.checked });
+    this.props.updateStatusAgence(event.target.checked);
+  };
+
+  UNSAFE_componentWillUpdate(nextProps) {
+    if (nextProps.user.agence.online !== this.state.checked) {
+      console.log(" sync checked to props agence  ...");
+      this.setState({ checked: nextProps.user.agence.online });
+    }
+  }
+
+  render() {
+    return (
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <IOSSwitch
+              checked={this.state.checked}
+              onChange={this.handleChange}
+              name="checked"
+            />
+          }
+          label="Active"
+        />
+      </FormGroup>
+    );
+  }
 }
 
-export default connect(null, {
+const mapStateToProps = (state) => ({
+  user: state.auth.user,
+});
+export default connect(mapStateToProps, {
   updateStatusAgence,
 })(CustomizedSwitches);
